@@ -1,13 +1,986 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI HUB</title>
+<link rel="stylesheet" href="./src/index.css">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.813.0.min.js"></script>
+</head>
+<body>
+<div class="App">
+    <header> 
+        <button id="btnMainMenu" style="display:none;">Main Menu</button>
+        
+    </header>
+    <h1>CHOOSE REQUIRED SERVICE</h1>
+    <div class="container">
+        <div class="inner">
+            <div class="item">
+                <img src="imgen.webp" class="img">
+                <button class="btn" id="btnImageGeneration">IMAGE <br> GENERATION</button>
+            </div>
+            <div class="item">
+                <img src="iman.webp" class="img">
+                <button class="btn" id="btnImageAnalysis">IMAGE <br> ANALYSIS</button>
+            </div>
+           
+            <div class="item">
+                <img src="tta.webp" class="img">
+                <button class="btn" id="btnTextToAudio">TEXT TO <br> AUDIO<br> 
+                </button>
+            </div>
+            <div class="item">
+                <img src="att.webp" class="img">
+                <button class="btn" id="btnAudioToText">AUDIO TO <br> TEXT<br> 
+                </button>
+            </div>
+
+                <div class="item">
+                    <img src="imtotext.webp" class="img">
+                    <button class="btn" id="btnExtractText" >EXTRACT TEXT FROM IMAGE  </button>
+                </div>
+
+                <div class="item">
+                    <img src="bgremove.webp" class="img">
+                    <button class="btn" id="btnRemoveBackg" >REMOVE IMAGE BACKGROUND <br></button>
+                </div>
+
+                <div class="item">
+                    <img src="suno.webp" class="img" >
+                    <button class="btn" id="btnSong" >CREATE A <br> SONG</button>
+                </div>
+    
+                <div class="item">
+                    <img src="locationf.webp" class="img" >
+                    <button class="btn" id="btnLocation" >FIND LOCATION FROM PICTURE</button>
+                </div>
+
+            <div class="item">
+                <img src="chatwdata.webp" class="img" disabled style="opacity: 0.5;">
+                <button class="btn" id="btnChatWithData" disabled style="opacity: 0.5;">CHAT WITH YOUR DATA (SOON)<br></button>
+            </div>
+
+            <div class="item">
+                <img src="gpts.webp" class="img" disabled style="opacity: 0.5;">
+                <button class="btn" id="btnGPTs" disabled style="opacity: 0.5;">GPTS (COMING SOON)<br></button>
+
+            </div>
+<div class="item">
+                    <img src="ytttext.webp" class="img" disabled style="opacity: 0.5;">
+                    <button class="btn" id="btnYTtranscribe" disabled style="opacity: 0.5;">TEXT FROM YOUTUBE VIDEO (SOON)  </button>
+                </div>
+            
+            <div class="item">
+                <img src="legalrew.webp" class="img" disabled style="opacity: 0.5;">
+                <button class="btn" id="btnLegalReview" disabled style="opacity: 0.5;">REVIEW LEGAL DOCUMENTS (SOON)<br></button>
+            </div>
+
+            
+            
+
+        </div>
+        
+        <div id="imageGenerationForm" style="display:none;">
+            <label for="inputText">Prompt:</label>
+            <textarea id="inputText" placeholder="Enter your image prompt"></textarea>
+            
+            <!--
+            <label for="modelSelector">Model:</label>
+            <select id="modelSelector">
+                <option value="replicate">Replicate</option>
+                <option value="dalle">DALL-EE</option>
+                <option value="dalle">DeepAI</option>
+            </select>
+            
+            <label for="numImagesSelector">Image count:</label>
+            <select id="numImagesSelector">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+            -->
+            <div id="modal">
+                <div>
+                  <p id="modalText">Sending data...</p>
+                </div>
+              </div>
+            <button onclick="generateImage()">Generate Image</button>
+            <div id="creditCost" style="text-align: center; margin-top: 10px;">
+                Cost: 1 credit
+            </div>
+
+        </div>
+
+
+        <div id="imageAnalysisForm" style="display:none;">
+          <label for="imageUpload">Upload Image (png, jpeg, webp, gif up to 20mb):</label>
+          <input type="file" id="imageUpload" accept=".png, .jpeg, .jpg, .webp, .gif">
+          
+          <label for="analysisPrompt">Analysis Prompt:</label>
+          <textarea id="analysisPrompt" placeholder="Describe what to analyze in the image"></textarea>
+          <div id="modal1">
+            <div>
+              <p id="modalText1">Sending data...</p>
+            </div>
+          </div>
+          <button onclick="analyzeImage()">Analyze Image</button>
+          <div id="creditCost" style="text-align: center; margin-top: 10px;">
+            Cost: 1 credit
+        </div>
+      </div>
+
+
+<div id="textToAudioForm" style="display:none;">
+        <label for="textInputt2a">Enter Text:</label>
+        <textarea id="textInputt2a" placeholder="Type your text here..."></textarea>
+        
+        <label for="voiceSelector">Choose Voice:</label>
+        <select id="voiceSelector">
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+        
+        <label for="languageSelector">Choose Language:</label>
+        <select id="languageSelector">
+          <option value="en">English</option>
+          <option value="ru">Russian</option>
+          <option value="zh">Chinese</option>
+          <option value="fr">French</option>
+          <option value="ja">Japanese</option>
+          <option value="he">Hebrew</option>
+          <option value="hi">Hindi</option>
+          <option value="lt">Lithuanian</option>
+          <option value="es">Spanish</option>
+          <option value="de">German</option>
+        </select>
+        
+        <div id="modal2">
+          <div>
+            <p id="modalText2">Sending data...</p>
+          </div>
+        </div>
+        
+        <button onclick="convertTextToAudio()">Convert to Audio</button>
+        
+        <div id="creditCost" style="text-align: center; margin-top: 10px;">
+          Cost: 1 credit
+        </div>
+      </div>
+
+        <div id="audioToTextForm" style="display:none;">
+          <label for="audioUpload">Upload Audio File (MP3, WAV, M4A up to 25MB):</label>
+          <input type="file" id="audioUpload" accept="audio/mp3,audio/wav,audio/m4a">
+          <div id="modal3">
+            <div>
+              <p id="modalText3">Sending data...</p>
+            </div>
+          </div>
+          <button onclick="convertAudioToText()">Convert Audio to Text</button>
+          <div id="creditCost" style="text-align: center; margin-top: 10px;">
+            Cost: 1 credit
+        </div>
+      </div>
+      
+      <div id="ocrForm" style="display:none;">
+        <label for="ocrUpload">Upload Image (png, jpeg, tiff up to 20mb):</label>
+        <input type="file" id="ocrUpload" accept=".png, .jpeg, .jpg, .tiff">
+        <div id="modal4">
+            <div>
+              <p id="modalText4">Sending data...</p>
+            </div>
+          </div>
+        <button onclick="extractText()">Extract Text</button>
+        <div id="creditCost" style="text-align: center; margin-top: 10px;">
+            Cost: 1 credit
+        </div>
+    </div>
+
+    <div id="bgRemForm" style="display:none;">
+        <label for="bgRemUpload">Upload Image (png, jpeg, tiff up to 20mb):</label>
+        <input type="file" id="bgRemUpload" accept=".png, .jpeg, .jpg, .tiff">
+        <div id="modal5">
+            <div>
+              <p id="modalText5">Sending data...</p>
+            </div>
+          </div>
+        <button onclick="remBg()">Remove Background</button>
+        <div id="creditCost" style="text-align: center; margin-top: 10px;">
+            Cost: 1 credit
+        </div>
+    </div>
+
+    <div id="songForm" style="display:none;">
+        <label for="songText">Prompt:</label>
+        <textarea id="songText" placeholder="An uplifting pop song about TON blockchain"></textarea>
+        
+       
+        <div id="modal6">
+            <div>
+              <p id="modalText">Sending data...</p>
+            </div>
+          </div>
+        <button onclick="createSong()">Create a song</button>
+        <div id="creditCost" style="text-align: center; margin-top: 10px;">
+            Cost: 1 credit
+        </div>
+
+    </div>
+    
+    <div id="locationForm" style="display:none;">
+        <label for="locationUpload">Upload Location Image (png, jpeg, webp, gif up to 20mb):</label>
+        <input type="file" id="locationUpload" accept=".png, .jpeg, .jpg, .webp, .gif">
+        
+    
+        <div id="modal7">
+          <div>
+            <p id="modalText1">Sending data...</p>
+          </div>
+        </div>
+        <button onclick="findLocation()">Search for location</button>
+        <div id="creditCost" style="text-align: center; margin-top: 10px;">
+          Cost: 1 credit
+      </div>
+    </div>
+
+
+    </div>
+</div>
+
+
+<script>
+var appConfig = {};
+var s3;
+document.addEventListener("DOMContentLoaded", function() {
+    const buttons = document.querySelectorAll('.container .btn');
+    const header = document.querySelector('h1'); 
+
+    buttons.forEach(button => {
+        button.addEventListener('click', function() {
+            header.textContent = this.textContent.trim();
+        });
+    });
+
+    const mainMenuButton = document.getElementById('btnMainMenu');
+    const imageGenerationForm = document.getElementById('imageGenerationForm');
+    const imageAnalysisForm = document.getElementById('imageAnalysisForm');
+    const textToAudioForm = document.getElementById('textToAudioForm');
+    const audioToTextForm = document.getElementById('audioToTextForm');
+    const ocrForm = document.getElementById('ocrForm'); 
+    const bgRemovalForm = document.getElementById('bgRemForm'); 
+    const locationForm = document.getElementById('locationForm'); 
+    const songForm = document.getElementById('songForm'); 
+    const serviceContainer = document.querySelector('.container .inner');
+
+
+    mainMenuButton.addEventListener('click', function() {
+        serviceContainer.style.display = 'grid'; 
+        imageGenerationForm.style.display = 'none';
+        imageAnalysisForm.style.display = 'none';
+        textToAudioForm.style.display = 'none';
+        audioToTextForm.style.display = 'none';
+        mainMenuButton.style.display = 'none';
+        ocrForm.style.display = 'none'; 
+        bgRemovalForm.style.display = 'none'; 
+        songForm.style.display = 'none';
+        locationForm.style.display = 'none';
+
+        header.textContent = 'CHOOSE REQUIRED SERVICE';
+    });
+
+    document.getElementById('btnImageGeneration').addEventListener('click', function() {
+        serviceContainer.style.display = 'none';  
+        songForm.style.display = 'none';
+        bgRemovalForm.style.display = 'none';
+        imageGenerationForm.style.display = 'block';
+        imageAnalysisForm.style.display = 'none';
+        textToAudioForm.style.display = 'none';
+        audioToTextForm.style.display = 'none';
+        ocrForm.style.display = 'none'; 
+        locationForm.style.display = 'none';
+        mainMenuButton.style.display = 'block'; 
+    });
+
+    document.getElementById('btnImageAnalysis').addEventListener('click', function() {
+        serviceContainer.style.display = 'none';  
+        songForm.style.display = 'none';
+        bgRemovalForm.style.display = 'none';
+        imageGenerationForm.style.display = 'none';
+        imageAnalysisForm.style.display = 'block';
+        textToAudioForm.style.display = 'none';
+        audioToTextForm.style.display = 'none';
+        ocrForm.style.display = 'none'; 
+        locationForm.style.display = 'none';
+        mainMenuButton.style.display = 'block'; 
+    });
+
+    document.getElementById('btnTextToAudio').addEventListener('click', function() {
+        serviceContainer.style.display = 'none';  
+        songForm.style.display = 'none';
+        bgRemovalForm.style.display = 'none';
+        imageGenerationForm.style.display = 'none';
+        imageAnalysisForm.style.display = 'none';
+        textToAudioForm.style.display = 'block';
+        audioToTextForm.style.display = 'none';
+        ocrForm.style.display = 'none'; 
+        locationForm.style.display = 'none';
+        mainMenuButton.style.display = 'block'; 
+    });
+
+    document.getElementById('btnAudioToText').addEventListener('click', function() {
+        serviceContainer.style.display = 'none';  
+        songForm.style.display = 'none';
+        bgRemovalForm.style.display = 'none';
+        imageGenerationForm.style.display = 'none';
+        imageAnalysisForm.style.display = 'none';
+        textToAudioForm.style.display = 'none';
+        audioToTextForm.style.display = 'block';
+        ocrForm.style.display = 'none'; 
+        locationForm.style.display = 'none';
+        mainMenuButton.style.display = 'block'; 
+    });
+
+    document.getElementById('btnExtractText').addEventListener('click', function() {
+        serviceContainer.style.display = 'none';  
+        ocrForm.style.display = 'block';
+        imageGenerationForm.style.display = 'none';
+        imageAnalysisForm.style.display = 'none';
+        textToAudioForm.style.display = 'none';
+        audioToTextForm.style.display = 'none';
+        bgRemovalForm.style.display = 'none'; 
+        mainMenuButton.style.display = 'block'; 
+        locationForm.style.display = 'none';
+        songForm.style.display = 'none'; 
+    });
+ 
+    document.getElementById('btnRemoveBackg').addEventListener('click', function() {
+        serviceContainer.style.display = 'none';  
+        bgRemovalForm.style.display = 'block';
+        imageGenerationForm.style.display = 'none';
+        imageAnalysisForm.style.display = 'none';
+        textToAudioForm.style.display = 'none';
+        audioToTextForm.style.display = 'none';
+        ocrForm.style.display = 'none'; 
+        mainMenuButton.style.display = 'block';  
+        locationForm.style.display = 'none';
+        songForm.style.display = 'none';
+    });
+
+    document.getElementById('btnSong').addEventListener('click', function() {
+        serviceContainer.style.display = 'none';  
+        songForm.style.display = 'block';
+        bgRemovalForm.style.display = 'none';
+        imageGenerationForm.style.display = 'none';
+        imageAnalysisForm.style.display = 'none';
+        textToAudioForm.style.display = 'none';
+        audioToTextForm.style.display = 'none';
+        ocrForm.style.display = 'none'; 
+        locationForm.style.display = 'none';
+        mainMenuButton.style.display = 'block';  
+    });
+    document.getElementById('btnLocation').addEventListener('click', function() {
+        serviceContainer.style.display = 'none';  
+        songForm.style.display = 'none';
+        bgRemovalForm.style.display = 'none';
+        imageGenerationForm.style.display = 'none';
+        imageAnalysisForm.style.display = 'none';
+        textToAudioForm.style.display = 'none';
+        audioToTextForm.style.display = 'none';
+        ocrForm.style.display = 'none'; 
+        locationForm.style.display = 'block';
+        mainMenuButton.style.display = 'block';  
+    });
+
+});
+
+
+
+  let uid; 
+  let credits; 
+
+  window.onload = function() {
+    window.Telegram.WebApp.expand();
+    window.Telegram.WebApp.ready();
+    window.Telegram.WebApp.enableClosingConfirmation();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    uid = urlParams.get('uid');  
+    credits = urlParams.get('credits');  
+    const queryId = Telegram.WebApp.initDataUnsafe.query_id;
+    
+    getSecrets().then(() => {
+        configureAWS();
+    }).catch(error => {
+        console.error('Failed to fetch secrets:', error);
+    });
+};
+
+
+  async function configureAWS() {
+    AWS.config.update({
+        region: `${appConfig.awsRegion}`,
+        credentials: new AWS.CognitoIdentityCredentials({
+            IdentityPoolId: `${appConfig.IdentityPoolId}`
+        })
+    });
+
+    AWS.config.credentials.get(function(err) {
+        if (err) {
+            return;
+        }
+    });
+
+    s3 = new AWS.S3({
+        apiVersion: '2006-03-01',
+        params: { Bucket: `${appConfig.Bucket}` }
+    });
+
+    
+}
+
+  async function generateImage() {
+  const inputText = document.getElementById('inputText').value;
+ // const model = document.getElementById('modelSelector').value;
+  //const numImages = document.getElementById('numImagesSelector').value;
+  const queryId = window.Telegram.WebApp.initDataUnsafe.query_id;
+  const uid = window.Telegram.WebApp.initDataUnsafe.user.id;
+  
+  const data = {
+    inputText: inputText,
+   // model: model,
+    //numImages: numImages,
+    queryId: queryId,
+    uid: uid,
+    credits: credits,
+    serviceType: "image_generation"
+  };
+
+  if (credits <= 0) {
+    alert('You do not have enough credits.');
+    return;
+  }
+
+  if (inputText.trim() === '') {
+    alert('Please enter a prompt');
+    return;
+}
+
+  document.getElementById('modal').style.display = 'block';
+
+  fetch('https://aihubton.replit.app/web-data', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+  })
+  .then(jsonResponse => {
+    
+    window.Telegram.WebApp.close(); 
+  })
+  .catch(error => {
+    
+    document.getElementById('modal').style.display = 'none';
+    alert('Sorry, there was an issue. Try again later.' + error);
+    console.error('Error:', error);
+  });
+}
+  
+  
+
+
+async function analyzeImage() {
+    const analysisPrompt = document.getElementById('analysisPrompt').value;
+    const file = document.getElementById('imageUpload').files[0];
+    const uid = window.Telegram.WebApp.initDataUnsafe.user.id;
+    const queryId = window.Telegram.WebApp.initDataUnsafe.query_id;
+
+    
+    if (!file) {
+        alert('Please select an image file to upload.');
+        return;
+    }
+
+    
+    const validTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
+    if (!validTypes.includes(file.type)) {
+        alert('Invalid file type. Only PNG, JPEG, WEBP, and GIF files are allowed.');
+        return;
+    }
+
+    
+    if (file.size > 20971520) { 
+        alert('The file size must be less than 20MB.');
+        return;
+    }
+
+   
+    if (analysisPrompt.trim() === '') {
+        alert('Please enter a prompt');
+        return;
+    }
+
+   
+    const date = new Date();
+    const timestamp = `${date.getFullYear()}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}${date.getHours().toString().padStart(2, '0')}${date.getMinutes().toString().padStart(2, '0')}${date.getSeconds().toString().padStart(2, '0')}`;
+    const fileExtension = file.name.split('.').pop();
+    const fileName = `imanalysis${timestamp}.${fileExtension}`;
+    const s3Key = `${uid}/${encodeURIComponent(fileName)}`;
+
+    const params = {
+        Bucket: `${appConfig.Bucket}`, 
+        Key: s3Key,
+        Body: file,
+        ContentType: file.type, 
+        ACL: 'public-read'
+    };
+
+    try {
+        document.getElementById('modal1').style.display = 'block';
+        const uploadData = await s3.putObject(params).promise();
+        console.log("Upload Success", uploadData);
+
+        const dataToSend = {
+            analysisPrompt: analysisPrompt,
+            imageAnalysis: `https://${params.Bucket}.s3.amazonaws.com/${s3Key}`, 
+            uid: uid,
+            serviceType: "imageAnalysis",
+            queryId: queryId,
+            credits: credits
+        };
+
+        const response = await fetch('https://aihubton.replit.app/web-data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dataToSend)
+        });
+
+        if (!response.ok) {
+            throw new Error('Server responded with an error');
+        }
+        window.Telegram.WebApp.close(); 
+    } catch (error) {
+        
+        document.getElementById('modal1').style.display = 'none';
+        alert('Sorry, there was an issue. Try again later.');
+        console.error('Error:', error);
+    }
+}
+
+
+
+
+
+async function convertTextToAudio() {
+    const textInputt2a = document.getElementById('textInputt2a').value;
+    const voice = document.getElementById('voiceSelector').value;
+    const uid = window.Telegram.WebApp.initDataUnsafe.user.id;
+    const queryId = window.Telegram.WebApp.initDataUnsafe.query_id;
+const voicelang = document.getElementById('languageSelector').value;
+    
+    if (textInputt2a.trim() === '') {
+        alert('Please enter text to convert to audio.');
+        return;
+    }
+
+    if (voice.trim() === '') {
+        alert('Please select a voice option.');
+        return;
+    }
+
+    const data = {
+        textInputt2a: textInputt2a,
+        svoice: voice,
+        uid: uid,
+        queryId: queryId,
+        serviceType: "text_to_audio",
+        credits: credits,
+         voicelang: voicelang
+    };
+
+    if (credits <= 0) {
+        alert('You do not have enough credits.');
+        return;
+    }
+
+    document.getElementById('modal2').style.display = 'block';
+
+    fetch('https://aihubton.replit.app/web-data', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        window.Telegram.WebApp.close();
+    })
+    .catch(error => {
+        document.getElementById('modal2').style.display = 'none';
+        alert('Failed to convert text to audio. Please try again later');
+    });
+}
+
+
+async function convertAudioToText() {
+    const file = document.getElementById('audioUpload').files[0];
+    const uid = window.Telegram.WebApp.initDataUnsafe.user.id;
+    const queryId = window.Telegram.WebApp.initDataUnsafe.query_id;
+
+    if (!file) {
+        alert('Please select an audio file to upload.');
+        return;
+    }
+
+    const validTypes = ['audio/mp3', 'audio/mpeg', 'audio/wav', 'audio/x-wav', 'audio/m4a'];
+    if (!validTypes.includes(file.type)) {
+        alert('Invalid file type. Only MP3, WAV, and M4A files are allowed.');
+        return;
+    }
+
+    if (file.size > 26214400) {  
+        alert('The file size must be less than 25MB.');
+        return;
+    }
+
+    document.getElementById('modal3').style.display = 'block';
+    const date = new Date();
+    const timestamp = `${date.getFullYear()}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}${date.getHours().toString().padStart(2, '0')}${date.getMinutes().toString().padStart(2, '0')}${date.getSeconds().toString().padStart(2, '0')}`;
+    const fileName = `audio${timestamp}.${file.type.split('/')[1]}`;
+    const s3Key = `${uid}/${encodeURIComponent(fileName)}${appConfig.s3KeyHide}}`;
+
+    const params = {
+        Bucket: appConfig.Bucket,  
+        Key: s3Key,
+        Body: file,
+        ContentType: file.type,
+        ACL: 'public-read'  
+    };
+
+    try {
+        const uploadData = await s3.upload(params).promise();
+        console.log('Successfully uploaded audio to:', uploadData.Location);
+
+        const dataToSend = {
+            audioUrl: uploadData.Location,
+            uid: uid,
+            serviceType: "audio_to_text",
+            queryId: queryId,
+            credits: credits
+        };
+
+        const response = await fetch('https://aihubton.replit.app/web-data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dataToSend)
+        });
+
+        if (!response.ok) {
+            throw new Error('Server responded with an error');
+        }
+        window.Telegram.WebApp.close(); 
+    } catch (error) {
+        document.getElementById('modal3').style.display = 'none';
+        alert('Failed to process audio. Please try again later');
+    }
+}
+
+
+
+
+async function extractText() {
+    const file = document.getElementById('ocrUpload').files[0];
+    const uid = window.Telegram.WebApp.initDataUnsafe.user.id;
+    const queryId = window.Telegram.WebApp.initDataUnsafe.query_id;
+
+    if (!file) {
+        alert('Please select an image file to upload.');
+        return;
+    }
+
+    const validTypes = ['image/png', 'image/jpeg', 'image/tiff', 'image/jpg']; 
+    if (!validTypes.includes(file.type)) {
+        alert('Invalid file type. Only PNG, JPEG, JPG, and TIFF files are allowed.');
+        return;
+    }
+
+    if (file.size > 20971520) { 
+        alert('The file size must be less than 20MB.');
+        return;
+    }
+
+    document.getElementById('modal4').style.display = 'block'; 
+
+    const date = new Date();
+    const timestamp = `${date.getFullYear()}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}${date.getHours().toString().padStart(2, '0')}${date.getMinutes().toString().padStart(2, '0')}${date.getSeconds().toString().padStart(2, '0')}`;
+    const fileExtension = file.name.split('.').pop();
+    const fileName = `ocr${timestamp}.${fileExtension}`;
+    const s3Key = `${uid}/${encodeURIComponent(fileName)}${appConfig.s3KeyHide}`;
+
+    const params = {
+        Bucket: appConfig.Bucket, 
+        Key: s3Key,
+        Body: file,
+        ContentType: file.type, 
+        ACL: 'public-read'
+    };
+
+    try {
+        const uploadData = await s3.putObject(params).promise();
+        console.log("Upload Success", uploadData);
+
+        const dataToSend = {
+            ocrUpload: `https://${params.Bucket}.s3.amazonaws.com/${s3Key}`, 
+            uid: uid,
+            serviceType: "OCR",
+            queryId: queryId,
+            credits: credits
+        };
+
+        const response = await fetch('https://aihubton.replit.app/web-data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dataToSend)
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        window.Telegram.WebApp.close(); 
+    } catch (error) {
+        console.error("Failed to upload image or send data:", error);
+        document.getElementById('modal4').style.display = 'none';
+        alert('Failed to send OCR data. Please try again later');
+    }
+}
+
+
+
+
+async function remBg() {
+    const file = document.getElementById('bgRemUpload').files[0];
+    const uid = window.Telegram.WebApp.initDataUnsafe.user.id;
+    const queryId = window.Telegram.WebApp.initDataUnsafe.query_id;
+
+    
+    if (!file) {
+        alert('Please select an image file to upload.');
+        return;
+    }
+
+   
+    const validTypes = ['image/png', 'image/jpeg', 'image/tiff', 'image/jpg']; 
+    if (!validTypes.includes(file.type)) {
+        alert('Invalid file type. Only PNG, JPEG, JPG, and TIFF files are allowed.');
+        return;
+    }
+
+    
+    if (file.size > 20971520) { 
+        alert('The file size must be less than 20MB.');
+        return;
+    }
+
+    
+    const date = new Date();
+    const timestamp = `${date.getFullYear()}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}${date.getHours().toString().padStart(2, '0')}${date.getMinutes().toString().padStart(2, '0')}${date.getSeconds().toString().padStart(2, '0')}`;
+    const fileExtension = file.name.split('.').pop();
+    const fileName = `rembg${timestamp}.${fileExtension}`;
+    const s3Key = `${uid}/${encodeURIComponent(fileName)}${appConfig.s3KeyHide}`;
+
+    const params = {
+        Bucket: `${appConfig.Bucket}`, 
+        Key: s3Key,
+        Body: file,
+        ContentType: file.type, 
+        ACL: 'public-read'
+    };
+
+    document.getElementById('modal5').style.display = 'block'; 
+
+    try {
+        const uploadData = await s3.putObject(params).promise();
+        console.log("Upload Success", uploadData);
+
+        const dataToSend = {
+            bgUpload: `https://${params.Bucket}.s3.amazonaws.com/${s3Key}`, 
+            uid: uid,
+            serviceType: "RemBg",
+            queryId: queryId,
+            credits: credits
+        };
+
+        // Send data to the server
+        const response = await fetch('https://aihubton.replit.app/web-data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dataToSend)
+        });
+
+        
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        window.Telegram.WebApp.close(); 
+    } catch (error) {
+        console.error("Failed to upload image or send data:");
+        document.getElementById('modal5').style.display = 'none'; 
+        alert('Failed to send image for background removal. Please try again later');
+    }
+}
+
+
+async function getSecrets() {
+  const url = `https://aihubton.replit.app/web-data`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+
+    const data = await response.json();
+    appConfig = {...data};  
+    console.log('Secrets fetched:', appConfig);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
+
+async function createSong() {
+  const songText = document.getElementById('songText').value;
+  const queryId = window.Telegram.WebApp.initDataUnsafe.query_id;
+  const uid = window.Telegram.WebApp.initDataUnsafe.user.id;
+  
+  const data = {
+    songText: songText,
+    queryId: queryId,
+    uid: uid,
+    credits: credits,
+    serviceType: "createSong"
+  };
+
+  if (credits <= 0) {
+    alert('You do not have enough credits.');
+    return;
+  }
+
+  if (songText.trim() === '') {
+    alert('Please enter a prompt');
+    return;
+}
+
+  document.getElementById('modal6').style.display = 'block';
+
+  fetch('https://aihubton.replit.app/web-data', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+  })
+  .then(jsonResponse => {
+    
+    window.Telegram.WebApp.close(); 
+  })
+  .catch(error => {
+    
+    document.getElementById('modal6').style.display = 'none';
+    alert('Sorry, there was an issue. Try again later.' + error);
+    console.error('Error:', error);
+  });
+}
+  
+  
+async function findLocation() {
+    const file = document.getElementById('locationUpload').files[0];
+    const uid = window.Telegram.WebApp.initDataUnsafe.user.id;
+    const queryId = window.Telegram.WebApp.initDataUnsafe.query_id;
+
+    
+    if (!file) {
+        alert('Please select an image file to upload.');
+        return;
+    }
+
+    
+    const validTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
+    if (!validTypes.includes(file.type)) {
+        alert('Invalid file type. Only PNG, JPEG, WEBP, and GIF files are allowed.');
+        return;
+    }
+
+    
+    if (file.size > 20971520) { 
+        alert('The file size must be less than 20MB.');
+        return;
+    }
+
+   
+   
+
+   
+    const date = new Date();
+    const timestamp = `${date.getFullYear()}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}${date.getHours().toString().padStart(2, '0')}${date.getMinutes().toString().padStart(2, '0')}${date.getSeconds().toString().padStart(2, '0')}`;
+    const fileExtension = file.name.split('.').pop();
+    const fileName = `findloc${timestamp}.${fileExtension}`;
+    const s3Key = `${uid}/${encodeURIComponent(fileName)}`;
+
+    const params = {
+        Bucket: `${appConfig.Bucket}`, 
+        Key: s3Key,
+        Body: file,
+        ContentType: file.type, 
+        ACL: 'public-read'
+    };
+
+    try {
+        document.getElementById('modal7').style.display = 'block';
+        const uploadData = await s3.putObject(params).promise();
+        console.log("Upload Success", uploadData);
+
+        const dataToSend = {
+            locationUpload: `https://${params.Bucket}.s3.amazonaws.com/${s3Key}`, 
+            uid: uid,
+            serviceType: "findLocation",
+            queryId: queryId,
+            credits: credits
+        };
+
+        const response = await fetch('https://aihubton.replit.app/web-data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dataToSend)
+        });
+
+        if (!response.ok) {
+            throw new Error('Server responded with an error');
+        }
+        window.Telegram.WebApp.close(); 
+    } catch (error) {
+        
+        document.getElementById('modal7').style.display = 'none';
+        alert('Sorry, there was an issue. Try again later.');
+        console.error('Error:', error);
+    }
+}
+
+
+
+  </script>
+  
+</body>
 </html>

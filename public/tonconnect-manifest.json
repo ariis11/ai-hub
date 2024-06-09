@@ -1,5 +1,7 @@
 {
-    "url": "https://join.toncompany.org",
-    "name": "AI Hub",
-    "iconUrl": "https://ariis11.github.io/ai-hub/icon.png"
+    "url": "https://aihub-ton.tech",
+    "name": "AI HUB",
+    "iconUrl": "https://ariis11.github.io/ai-hub/logo-black.png",
+    "termsOfUseUrl": "https://aihub-ton.site/terms-and-conditions",
+    "privacyPolicyUrl": "https://aihub-ton.site/privacy-policy"
 }
