@@ -1,13 +1,20 @@
-// import { useState } from 'react'
-import './App.css'
+import { useEffect } from 'react';
+import Home from './components/Home';
+import { TonConnectButton } from '@tonconnect/ui-react';
 
-function App() {
+export default function App() {
+  useEffect(() => {
+    if ((window as any).Telegram) {
+      (window as any).Telegram.WebApp.ready();
+    }
+  }, []);
 
   return (
     <>
-      LABAS
+      <div className='right-align'>
+        <TonConnectButton />
+      </div>
+      <Home />
     </>
-  )
+  );
 }
-
-export default App
